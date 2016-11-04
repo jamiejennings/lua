@@ -8,3 +8,5 @@
 **/*~
 *.tar.gz
 
+src/lua
+src/luac
