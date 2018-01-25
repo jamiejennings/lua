@@ -51,8 +51,12 @@ R= $V.2
 # Targets start here.
 all:	$(PLAT)
 
+ifdef PLAIN_LUA
+plain_lua="PLAIN_LUA=1"
+endif
+
 $(PLATS) clean:
-	cd src && $(MAKE) $@
+	cd src && $(MAKE) $@ $(plain_lua)
 
 test:	dummy
 	src/lua -v
