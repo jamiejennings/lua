@@ -19,7 +19,9 @@ SYSCFLAGS=
 SYSLDFLAGS=
 SYSLIBS=
 
-MYCFLAGS=-fvisibility=hidden
+ifndef PLAIN_LUA
+MYCFLAGS=-fvisibility=hidden -fPIC
+endif
 MYLDFLAGS=
 MYLIBS=
 MYOBJS=
