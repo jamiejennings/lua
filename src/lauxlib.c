@@ -625,6 +625,14 @@ typedef struct LoadF {
 } LoadF;
 
 
+/* JAJ Saturday, April 7, 2018: Changed feof to feof_unlocked because
+ * multi-threaded programs sometimes deadlocked, and when they did,
+ * there was always a thread stuck in feof, with other threads blocked
+ * on a mutex.
+*/
+#define	__SEOF	0x0020		/* found EOF */
+#define	feof_unlocked(p)	(((p)->_flags & __SEOF) != 0)
+
 static const char *getF (lua_State *L, void *ud, size_t *size) {
   LoadF *lf = (LoadF *)ud;
   (void)L;  /* not used */
@@ -636,7 +644,7 @@ static const char *getF (lua_State *L, void *ud, size_t *size) {
     /* 'fread' can return > 0 *and* set the EOF flag. If next call to
        'getF' called 'fread', it might still wait for user input.
        The next check avoids this problem. */
-    if (feof(lf->f)) return NULL;
+    if (feof_unlocked(lf->f)) return NULL;
     *size = fread(lf->buff, 1, sizeof(lf->buff), lf->f);  /* read block */
   }
   return lf->buff;
